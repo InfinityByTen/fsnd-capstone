@@ -14,6 +14,10 @@ def setup_db(app, db_path=database_path):
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.app = app
     db.init_app(app)
+
+
+def db_drop_and_create_all():
+    db.drop_all()
     db.create_all()
     init_db()
 
@@ -46,7 +50,12 @@ class Actor(db.Model, BasicDbOps):
     name = db.Column(db.String, nullable=False)
     age = db.Column(db.Integer, nullable=False)
     gender = db.Column(db.String, nullable=False)
-    movie_ref = db.relationship('Movie', backref='actor',lazy=True)
+    movie_ref = db.relationship('Movie', backref='actor', lazy=True)
+
+    def __init__(self, name, age, gender):
+        self.name = name
+        self.age = age
+        self.gender = gender
 
     def __repr__(self):
         return f'<Actor, Name:"{self.name}",\n\
@@ -63,6 +72,11 @@ class Movie(db.Model, BasicDbOps):
     release_date = db.Column(db.Date, nullable=False)
     selected_actor = db.Column(
         db.Integer, db.ForeignKey('Actors.id'), nullable=True)
+
+    def __init__(self, title, requirements, release_date):
+        self.title = title
+        self.requirements = json.loads(requirements)
+        self.release_date = release_date
 
     def __repr__(self):
         return f'<Movie, Title:"{self.title}",\n\
@@ -84,13 +98,13 @@ def init_db():
     movies = [
         Movie(title="Oceans 11",
               release_date=datetime.date(day=1, month=1, year=2021),
-              requirements=json.loads('{"age_min":25,"age_max":55,"gender":"M"}')),
+              requirements='{"age_min":25,"age_max":55,"gender":"M"}'),
         Movie(title="Wonder Women",
               release_date=datetime.date(day=1, month=1, year=2022),
-              requirements=json.loads('{"age_min":25,"age_max":55,"gender":"F"}')),
+              requirements='{"age_min":25,"age_max":55,"gender":"F"}'),
         Movie(title="Casino Royale",
               release_date=datetime.date(day=1, month=1, year=2023),
-              requirements=json.loads('{"age_min":25,"age_max":55,"gender":"F"}'))
+              requirements='{"age_min":25,"age_max":55,"gender":"F"}')
     ]
 
     db.session.add_all(movies)
