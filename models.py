@@ -2,6 +2,7 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import datetime
+from dataclasses import dataclass
 import json
 
 database_path = os.environ['DATABASE_URL']
@@ -42,9 +43,13 @@ class BasicDbOps:
     def update(self):
         db.session.commit()
 
-
+@dataclass
 class Actor(db.Model, BasicDbOps):
     __tablename__ = 'Actors'
+
+    id:  int
+    name:  str
+    gender:  str
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
@@ -62,9 +67,14 @@ class Actor(db.Model, BasicDbOps):
                          Age: "{self.age}",\n\
                          Gender: "{self.gender}">'
 
-
+@dataclass
 class Movie(db.Model, BasicDbOps):
     __tablename__ = "Movies"
+
+    id:  int
+    title:  str
+    requirements:  json
+    release_date:  datetime.date
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
