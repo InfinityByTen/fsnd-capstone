@@ -41,7 +41,7 @@ def db_status():
 @APP.route('/movies')
 def get_movies():
     movies = Movie.query.all()
-    return jsonify({"success": True, "actors": movies})
+    return jsonify({"success": True, "movies": movies})
 
 
 '''
@@ -53,7 +53,7 @@ def get_movies():
 @APP.route('/movies/<int:movie_id>')
 def get_movie_by_id(movie_id):
     movies = Movie.query.get(movie_id)
-    return jsonify({"success": True, "actors": movies})
+    return jsonify({"success": True, "movies": movies})
 
 
 '''
@@ -94,30 +94,36 @@ def delete_movie(movie_id):
     print("Request to delete Movie #", movie_id)
     return jsonify({"success": True})
 
+
 '''
     GET /actors
         get all actors
 '''
+
 
 @APP.route('/actors')
 def get_actors():
     actors = Actor.query.all()
     return jsonify({"success": True, "actors": actors})
 
+
 '''
     GET /actors/id
         get specific actor by id
 '''
+
 
 @APP.route('/actors/<int:actor_id>')
 def get_actor_by_id(actor_id):
     actors = Actor.query.get(actor_id)
     return jsonify({"success": True, "actors": actors})
 
+
 '''
     POST /actors/new
         create a new actor entry
 '''
+
 
 @APP.route('/actors/new', methods=['POST'])
 def add_new_actor():
@@ -125,10 +131,12 @@ def add_new_actor():
     print(data)
     return jsonify({"success": True})
 
+
 '''
     PATCH /actors/id
         edit an actor entry with id
 '''
+
 
 @APP.route('/actors/<int:actor_id>', methods=['PATCH'])
 def patch_actor(actor_id):
@@ -136,6 +144,7 @@ def patch_actor(actor_id):
     print("Request to patch Actor #", actor_id)
     print(data)
     return jsonify({"success": True})
+
 
 '''
     DELETE /actors/id

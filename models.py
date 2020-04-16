@@ -43,6 +43,7 @@ class BasicDbOps:
     def update(self):
         db.session.commit()
 
+
 @dataclass
 class Actor(db.Model, BasicDbOps):
     __tablename__ = 'Actors'
@@ -66,6 +67,7 @@ class Actor(db.Model, BasicDbOps):
         return f'<Actor, Name:"{self.name}",\n\
                          Age: "{self.age}",\n\
                          Gender: "{self.gender}">'
+
 
 @dataclass
 class Movie(db.Model, BasicDbOps):
