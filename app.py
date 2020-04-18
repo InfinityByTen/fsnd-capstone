@@ -116,6 +116,7 @@ def delete_movie(movie_id):
         abort(404)
     try:
         print("Request to delete Movie #", movie_id)
+        movie.delete()
         return jsonify({"success": True, "movie": movie})
     except Exception as e:
         print(e)
@@ -209,6 +210,7 @@ def delete_actor(actor_id):
         abort(404)
     try:
         print("Request to delete Actor #", actor_id)
+        actor.delete()
         return jsonify({"success": True, "actor": actor})
     except Exception as e:
         abort(422)
