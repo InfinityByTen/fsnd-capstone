@@ -50,6 +50,7 @@ class Actor(db.Model, BasicDbOps):
 
     id:  int
     name:  str
+    age:  int
     gender:  str
 
     id = db.Column(db.Integer, primary_key=True)
@@ -62,11 +63,6 @@ class Actor(db.Model, BasicDbOps):
         self.name = name
         self.age = age
         self.gender = gender
-
-    def __repr__(self):
-        return f'<Actor, Name:"{self.name}",\n\
-                         Age: "{self.age}",\n\
-                         Gender: "{self.gender}">'
 
 
 @dataclass
@@ -89,11 +85,6 @@ class Movie(db.Model, BasicDbOps):
         self.title = title
         self.requirements = json.loads(requirements)
         self.release_date = release_date
-
-    def __repr__(self):
-        return f'<Movie, Title:"{self.title}",\n\
-                         Requirements: "{json.dump(self.requirements)}",\n\
-                         Release: "{self.release_date}">'
 
 
 def init_db():
