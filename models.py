@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 import datetime
 from dataclasses import dataclass
 import json
+from dataclasses_jsonschema import JsonSchemaMixin
 
 database_path = os.environ['DATABASE_URL']
 
@@ -23,7 +24,7 @@ def db_drop_and_create_all():
     init_db()
 
 
-class BasicDbOps:
+class BasicDbOps():
     ''' 
     This class is to handle the common basic db ops for each db.Model
 
@@ -45,13 +46,18 @@ class BasicDbOps:
 
 
 @dataclass
-class Actor(db.Model, BasicDbOps):
-    __tablename__ = 'Actors'
-
-    id:  int
+class ActorSchema(JsonSchemaMixin):
+    """Actor Format"""
     name:  str
     age:  int
     gender:  str
+
+
+@dataclass
+class Actor(db.Model, BasicDbOps, ActorSchema):
+    __tablename__ = 'Actors'
+
+    id:  int
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
@@ -66,13 +72,26 @@ class Actor(db.Model, BasicDbOps):
 
 
 @dataclass
-class Movie(db.Model, BasicDbOps):
+class MovieRequirements(JsonSchemaMixin):
+    """Actor Requirements for the Movie"""
+    age_min:  int
+    age_max:  int
+    gender:  str
+
+
+@dataclass
+class MovieSchema(JsonSchemaMixin):
+    """Movie Format"""
+    title:  str
+    requirements:  MovieRequirements
+    release_date:  datetime.date
+
+
+@dataclass
+class Movie(db.Model, BasicDbOps, MovieSchema):
     __tablename__ = "Movies"
 
     id:  int
-    title:  str
-    requirements:  json
-    release_date:  datetime.date
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)

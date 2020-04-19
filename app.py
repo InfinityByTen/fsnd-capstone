@@ -1,10 +1,12 @@
 import os
+from dataclasses import asdict
 from flask import Flask, request, abort, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import json
+import re
 
-from models import setup_db, Actor, Movie
+from models import setup_db, MovieSchema, ActorSchema, Actor, Movie
 
 
 def create_app(test_config=None):
@@ -16,6 +18,13 @@ def create_app(test_config=None):
 
 
 APP = create_app()
+
+
+# Model Schema validation helper
+def formatted_json_validation_error(error):
+    return jsonify({"success": False, "error": re.sub(
+        " {4,}", " ", str(error).replace("\n", ' '))}), 422
+
 
 # ROUTES
 '''
@@ -74,10 +83,20 @@ def add_new_movie():
     try:
         data = json.loads(request.data)
         print(data)
-        return jsonify({"success": True})
     except Exception as e:
         print(e)
-        abort(422)
+        abort(400)
+    try:
+        entry = MovieSchema.from_dict(data)
+        entry_dict = asdict(entry)
+        movie = Movie(title=entry_dict['title'],
+                      requirements=json.dumps(entry_dict['requirements']),
+                      release_date=entry_dict['release_date'])
+        print(movie)
+        movie.insert()
+        return jsonify({"success": True})
+    except Exception as e:
+        return formatted_json_validation_error(e)
 
 
 '''
@@ -168,10 +187,20 @@ def add_new_actor():
     try:
         data = json.loads(request.data)
         print(data)
-        return jsonify({"success": True})
     except Exception as e:
         print(e)
-        abort(422)
+        abort(400)
+    try:
+        entry = ActorSchema.from_dict(data)
+        entry_dict = asdict(entry)
+        actor = Actor(name=entry_dict['name'],
+                      age=entry_dict['age'],
+                      gender=entry_dict['gender'])
+        print(actor)
+        actor.insert()
+        return jsonify({"success": True})
+    except Exception as e:
+        return formatted_json_validation_error(e)
 
 
 '''
@@ -233,7 +262,7 @@ def unprocessable(error):
 
 
 @APP.errorhandler(404)
-def unprocessable(error):
+def not_found(error):
     return jsonify({
         "success": False,
         "error": 404,
@@ -246,13 +275,13 @@ def unprocessable(error):
 '''
 
 
-@APP.errorhandler(500)
-def unprocessable(error):
+@APP.errorhandler(400)
+def bad_request(error):
     return jsonify({
         "success": False,
-        "error": 500,
-        "message": "Internal Server Error"
-    }), 500
+        "error": 400,
+        "message": "Your request was not a correct json"
+    }), 400
 
 
 '''
