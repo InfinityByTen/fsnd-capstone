@@ -6,6 +6,7 @@ from flask_cors import CORS
 import json
 import re
 
+from auth import AuthError, requires_auth
 from models import setup_db, MovieSchema, ActorSchema, Actor, Movie
 from models import MovieRequirements
 
@@ -42,12 +43,12 @@ def health_check():
 '''
     GET /movies
         get all movies
-        @TODO: add auth get:movies
 '''
 
 
 @APP.route('/movies')
-def get_movies():
+@requires_auth('get:movies')
+def get_movies(something):
     try:
         movies = Movie.query.all()
         return jsonify({"success": True, "movies": movies})
@@ -64,7 +65,8 @@ def get_movies():
 
 
 @APP.route('/movies/<int:movie_id>')
-def get_movie_by_id(movie_id):
+@requires_auth('get:movies')
+def get_movie_by_id(something, movie_id):
     movie = Movie.query.get(movie_id)
     if not movie:
         abort(404)
@@ -75,12 +77,12 @@ def get_movie_by_id(movie_id):
 '''
     POST /movies/new
         create a new movie entry
-        @TODO: add auth post:movies
 '''
 
 
 @APP.route('/movies/new', methods=['POST'])
-def add_new_movie():
+@requires_auth('post:movies')
+def add_new_movie(something):
     try:
         data = json.loads(request.data)
         print(data)
@@ -103,12 +105,12 @@ def add_new_movie():
 '''
     PATCH /movies/id
         edit a movie entry with id
-        @ TODO: add auth patch:movies
 '''
 
 
 @APP.route('/movies/<int:movie_id>', methods=['PATCH'])
-def patch_movie(movie_id):
+@requires_auth('patch:movies')
+def patch_movie(something, movie_id):
     movie = Movie.query.get(movie_id)
     if not movie:
         abort(404)
@@ -123,7 +125,7 @@ def patch_movie(movie_id):
             if MovieRequirements.from_dict(data['requirements']):
                 movie.requirements = data['requirements']
         movie.update()
-        return jsonify({"success": True, "movie":movie})
+        return jsonify({"success": True, "movie": movie})
     except Exception as e:
         print(e)
         return formatted_json_validation_error(e)
@@ -132,12 +134,12 @@ def patch_movie(movie_id):
 '''
     DELETE /movies/id
         delete a movie entry with id
-        @TODO: add auth delete:movies
 '''
 
 
 @APP.route('/movies/<int:movie_id>', methods=['DELETE'])
-def delete_movie(movie_id):
+@requires_auth('delete:movies')
+def delete_movie(something, movie_id):
     movie = Movie.query.get(movie_id)
     if not movie:
         abort(404)
@@ -153,12 +155,12 @@ def delete_movie(movie_id):
 '''
     GET /actors
         get all actors
-        @TODO: add auth get:actors
 '''
 
 
 @APP.route('/actors')
-def get_actors():
+@requires_auth('get:actors')
+def get_actors(something):
     try:
         actors = Actor.query.all()
         return jsonify({"success": True, "actors": actors})
@@ -170,12 +172,12 @@ def get_actors():
 '''
     GET /actors/id
         get specific actor by id
-        @TODO: add auth get:actors
 '''
 
 
 @APP.route('/actors/<int:actor_id>')
-def get_actor_by_id(actor_id):
+@requires_auth('get:actors')
+def get_actor_by_id(something, actor_id):
     actor = Actor.query.get(actor_id)
     if not actor:
         abort(404)
@@ -186,12 +188,12 @@ def get_actor_by_id(actor_id):
 '''
     POST /actors/new
         create a new actor entry
-        @TODO: add auth post:actors
 '''
 
 
 @APP.route('/actors/new', methods=['POST'])
-def add_new_actor():
+@requires_auth('post:actors')
+def add_new_actor(something):
     try:
         data = json.loads(request.data)
         print(data)
@@ -214,12 +216,12 @@ def add_new_actor():
 '''
     PATCH /actors/id
         edit an actor entry with id
-        @TODO: add auth patch:actors
 '''
 
 
 @APP.route('/actors/<int:actor_id>', methods=['PATCH'])
-def patch_actor(actor_id):
+@requires_auth('patch:actors')
+def patch_actor(something, actor_id):
     actor = Actor.query.get(actor_id)
     if not actor:
         abort(404)
@@ -242,12 +244,12 @@ def patch_actor(actor_id):
 '''
     DELETE /actors/id
         delete an actor entry with id
-        @TODO: add auth delete:actors
 '''
 
 
 @APP.route('/actors/<int:actor_id>', methods=['DELETE'])
-def delete_actor(actor_id):
+@requires_auth('delete:actors')
+def delete_actor(something, actor_id):
     actor = Actor.query.get(actor_id)
     if not actor:
         abort(404)
@@ -302,6 +304,13 @@ def bad_request(error):
     Error handler for AuthError
 '''
 
+@APP.errorhandler(AuthError)
+def autherror(error):
+    return jsonify({
+        "success": False,
+        "error": error.status_code,
+        "message": error.error
+    }), error.status_code
 
 if __name__ == '__main__':
     APP.run(host='0.0.0.0', port=8080, debug=True)

@@ -92,14 +92,12 @@ def test_patch_movie_with_invalid_body(client):
     assert "'age_max' is a required property" in error_message
 
 
-
 def test_patch_movie_with_invalid_id(client):
     movie_id = 1000
     body = {"title": "random", "date": "12-12-12",
             "requirements": {"age_min": 20, "age_max": 50, "gender": "M"}}
     response = client.patch('/movies/' + str(movie_id), data=json.dumps(body))
     assert response.status_code == 404
-
 
     # movies:delete
 
@@ -167,11 +165,11 @@ def test_patch_actor(client):
 
 def test_patch_actor_with_invalid_body(client):
     actor_id = 2
-    original =  client.get('/actors/'+str(actor_id)).json["actors"]
+    original = client.get('/actors/'+str(actor_id)).json["actors"]
     body = {"name": "anonymous", "gendr": "others"}
     response = client.patch('/actors/'+str(actor_id), data=json.dumps(body))
     assert response.status_code == 200
-    updated =  client.get('/actors/'+str(actor_id)).json["actors"]
+    updated = client.get('/actors/'+str(actor_id)).json["actors"]
     # not updated because of wrong key
     assert updated["gender"] == original["gender"]
 
