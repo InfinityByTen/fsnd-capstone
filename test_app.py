@@ -83,11 +83,14 @@ def test_patch_movie(client):
 
 def test_patch_movie_with_invalid_body(client):
     movie_id = 1
-    body = {"date": "12-12-12",
-            "requirements": {"age_min": 20, "age_max": 50, "gender": "M"}}
+    body = {"release_date": "10-12-12",
+            "requirements": {"age_min": 20, "gender": "M"}}
     response = client.patch('/movies/' + str(movie_id), data=json.dumps(body))
-    # @TODO: This should be failing with a malformed request or invalid params
-    assert response.status_code == 200
+    assert response.status_code == 422
+    error_message = response.json['error']
+    assert error_message is not None
+    assert "'age_max' is a required property" in error_message
+
 
 
 def test_patch_movie_with_invalid_id(client):
@@ -164,10 +167,13 @@ def test_patch_actor(client):
 
 def test_patch_actor_with_invalid_body(client):
     actor_id = 2
-    body = {"name": "anonymous", "gender": "others"}
+    original =  client.get('/actors/'+str(actor_id)).json["actors"]
+    body = {"name": "anonymous", "gendr": "others"}
     response = client.patch('/actors/'+str(actor_id), data=json.dumps(body))
-    # @TODO: This should be failing with a malformed request or invalid params
     assert response.status_code == 200
+    updated =  client.get('/actors/'+str(actor_id)).json["actors"]
+    # not updated because of wrong key
+    assert updated["gender"] == original["gender"]
 
 
 def test_patch_actor_with_invalid_id(client):

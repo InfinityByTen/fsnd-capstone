@@ -7,6 +7,7 @@ import json
 import re
 
 from models import setup_db, MovieSchema, ActorSchema, Actor, Movie
+from models import MovieRequirements
 
 
 def create_app(test_config=None):
@@ -113,12 +114,19 @@ def patch_movie(movie_id):
         abort(404)
     try:
         data = json.loads(request.data)
-        print("Request to patch Movie #", movie_id)
-        print(data)
-        return jsonify({"success": True})
+        # @TODO: find an implementationthat does rigorous checks like post
+        if 'title' in data:
+            movie.title = data['title']
+        if 'release_date' in data:
+            movie.release_date = data['release_date']
+        if 'requirements' in data:
+            if MovieRequirements.from_dict(data['requirements']):
+                movie.requirements = data['requirements']
+        movie.update()
+        return jsonify({"success": True, "movie":movie})
     except Exception as e:
         print(e)
-        abort(422)
+        return formatted_json_validation_error(e)
 
 
 '''
@@ -217,9 +225,15 @@ def patch_actor(actor_id):
         abort(404)
     try:
         data = json.loads(request.data)
-        print("Request to patch Actor #", actor_id)
-        print(data)
-        return jsonify({"success": True})
+        # @TODO: find an implementation that does rigorous checks like post
+        if 'name' in data:
+            actor.name = data['name']
+        if 'age' in data:
+            actor.age = data['age']
+        if 'gender' in data:
+            actor.gender = data['gender']
+        actor.update()
+        return jsonify({"success": True, "actor": actor})
     except Exception as e:
         print(e)
         abort(422)
