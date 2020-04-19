@@ -285,7 +285,7 @@ def not_found(error):
 
 
 '''
-    Error handler for 500
+    Error handler for 400
 '''
 
 
