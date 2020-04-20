@@ -8,22 +8,23 @@ There are two sets of test suites for this project. The `RBAC` logic is tested v
 
 The postman collection is exported as a `.json` and a recent sample run has also been added. The `jwt`s needed for the different roles are just updated before upl;oading the changes and should last good for `24` hours from then. If not, feel free to create new using the frontend, provided you have the needed credentials shared to you.
 
-| WARNING: If you run the postman collection against the Heroku deployment, you might not be able to run it again, since it relies on a default state of the database (it also includes `DELETE` tests). If you try to delete the same resource twice, you will get a `404` and not a `200` or `401` depending on the permissions. |
+|  WARNING: If you run the postman collection against the Heroku deployment, you might not be able to run it again, since it relies on a default state of the database (it also includes `DELETE` tests). If you try to delete the same resource twice, you will get a `404` and not a `200` or `401` depending on the permissions. |
+|---|
 
 ## Unitests
 
 Before running the tests, please ensure that the db is started up from scratch. Run from the root
 
-        ```
-            python3 release_new.py
-        ```
+```bash
+   python3 release_new.py
+```
 
 Then `cd test`  and ensure the `test_app.py` has a correct `DATABASE_URL`. The tests need to be updated with the path of the database you created to run the app. Currenly it's a random location. Literally :)
 
 Once that is ensured, you can run the test with 
 
-        ```
-            pytest test_app.py
-        ```
+```bash
+   pytest test_app.py
+```
 
-If you did installed the requirements previously, then you should have all the modules needed to run the test. Else you can start a virtual environment from within the folder using the copy of `requirements.txt` which is provided in the `test` folder.
+If you did installed the requirements previously, then you should have all the modules needed to run the test. Else you can start a virtual environment from within the folder using the copy of `requirements.txt` which is provided in this folder.
