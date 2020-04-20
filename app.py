@@ -14,6 +14,7 @@ from models import MovieRequirements
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__)
+    app.config['TESTING']=False
     CORS(app)
     setup_db(app)
     return app
@@ -313,4 +314,4 @@ def autherror(error):
     }), error.status_code
 
 if __name__ == '__main__':
-    APP.run(host='0.0.0.0', port=8080, debug=True)
+    APP.run(host='0.0.0.0', port=8080, debug=False)
