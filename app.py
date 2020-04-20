@@ -25,7 +25,7 @@ APP = create_app()
 
 # Model Schema validation helper
 def formatted_json_validation_error(error):
-    return jsonify({"success": False, "error": re.sub(
+    return jsonify({"success": False, "error":422, "message": re.sub(
         " {4,}", " ", str(error).replace("\n", ' '))}), 422
 
 
@@ -115,8 +115,14 @@ def patch_movie(something, movie_id):
     movie = Movie.query.get(movie_id)
     if not movie:
         abort(404)
+
     try:
         data = json.loads(request.data)
+    except Exception as e:
+        print(e)
+        abort(400)
+
+    try:
         # @TODO: find an implementationthat does rigorous checks like post
         if 'title' in data:
             movie.title = data['title']
@@ -226,8 +232,14 @@ def patch_actor(something, actor_id):
     actor = Actor.query.get(actor_id)
     if not actor:
         abort(404)
+
     try:
         data = json.loads(request.data)
+    except Exception as e:
+        print(e)
+        abort(400)
+
+    try:
         # @TODO: find an implementation that does rigorous checks like post
         if 'name' in data:
             actor.name = data['name']

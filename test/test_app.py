@@ -68,12 +68,21 @@ def test_post_new_movie(client):
 
 
 def test_post_new_movie_with_invalid_body(client):
+    # invalid json
+    body = '{"title": "random" "release_date": "12-12-12",\
+            "requirements": {"age_min": 20, "age_max": 50, "gender": "M"}}'
+    response = client.post(
+        '/movies/new', data=body, headers=admin_header)
+    assert response.status_code == 400
+
+
+def test_post_new_movie_with_invalid_schema_body(client):
     body = {"release_date": "12-12-12",
             "requirements": {"age_min": 20, "age_max": 50, "gender": "M"}}
     response = client.post(
         '/movies/new', data=json.dumps(body), headers=admin_header)
     assert response.status_code == 422
-    error_message = response.json['error']
+    error_message = response.json['message']
     assert error_message is not None
     assert "'title' is a required property" in error_message
 
@@ -89,15 +98,24 @@ def test_patch_movie(client):
                             data=json.dumps(body), headers=admin_header)
     assert response.status_code == 200
 
-
 def test_patch_movie_with_invalid_body(client):
+    movie_id = 1
+    # invalid json
+    body = '{"title": "random" "date": "12-12-12",\
+            "requirements": {"age_min": 20, "age_max": 50, "gender": "M"}}'
+    response = client.patch('/movies/' + str(movie_id),
+                            data=body, headers=admin_header)
+    assert response.status_code == 400
+
+
+def test_patch_movie_with_invalid_schema_body(client):
     movie_id = 1
     body = {"release_date": "10-12-12",
             "requirements": {"age_min": 20, "gender": "M"}}
     response = client.patch('/movies/' + str(movie_id),
                             data=json.dumps(body), headers=admin_header)
     assert response.status_code == 422
-    error_message = response.json['error']
+    error_message = response.json['message']
     assert error_message is not None
     assert "'age_max' is a required property" in error_message
 
@@ -155,13 +173,19 @@ def test_post_new_actor(client):
         '/actors/new', data=json.dumps(body), headers=admin_header)
     assert response.status_code == 200
 
-
 def test_post_new_actor_with_invalid_body(client):
+    # invalid json
+    body = '{"name": "anonymous" "gender": "others"}'
+    response = client.post(
+        '/actors/new', data=body, headers=admin_header)
+    assert response.status_code == 400
+
+def test_post_new_actor_with_invalid_schema_body(client):
     body = {"name": "anonymous", "gender": "others"}
     response = client.post(
         '/actors/new', data=json.dumps(body), headers=admin_header)
     assert response.status_code == 422
-    error_message = response.json['error']
+    error_message = response.json['message']
     assert error_message is not None
     assert "'age' is a required property" in error_message
 
@@ -178,6 +202,14 @@ def test_patch_actor(client):
 
 
 def test_patch_actor_with_invalid_body(client):
+    actor_id = 2
+    # invalid json
+    body = '{"name": "anonymous" "age": 42, "gender": "others"}'
+    response = client.patch('/actors/'+str(actor_id),
+                            data=body, headers=admin_header)
+    assert response.status_code == 400
+
+def test_patch_actor_with_invalid_schema_body(client):
     actor_id = 2
     original = client.get('/actors/'+str(actor_id),
                           headers=admin_header).json["actors"]
