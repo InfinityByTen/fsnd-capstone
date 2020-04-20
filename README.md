@@ -48,14 +48,14 @@ The `Heroku` deployment runs the `gunicorn` version.
 
 Tests are a standalone portion of the project. There are two sets of test suites: unit tests for checking the app functionality and a postman collection to test the `RBAC` logic. 
 
-Once you have a local app running, you can read more about the tests in [.tests](.test/README.md).
+Once you have a local app running, you can read more about the tests in [.tests](test/README.md).
 
 
 ## Frontend
 
 A frontend to get `JWT` tokens is added as a sub-directory. The frontend is also a standalone folder and contains all the relevant information on how to get started and use. It's main purpose is only to get valid `JWT` to test the endpoint locally or the one hosted on `Heroku`.
 
-You can read more about it in [.frontend](.frontend/README.md).
+You can read more about it in [.frontend](frontend/README.md).
 
 
 ## API Reference
@@ -67,6 +67,7 @@ You can read more about it in [.frontend](.frontend/README.md).
     <summary>GET</summary>
 
     1. All movies
+
     * `GET /movies`
     * Sample Response [json]
         ```yaml
@@ -97,24 +98,25 @@ You can read more about it in [.frontend](.frontend/README.md).
         ```
 
     2. Specific movie by id
-    * `GET - /movies/movie_id`
+
+    * `GET /movies/movie_id`
     * Request Parameters movie_id=[integer]
     * Sample Response [json]
-            ```yaml
-                {
-                    "success": True,
-                    "movies": {
-                        "id": 1,
-                        "release_date": "Fri, 01 Jan 2021 00:00:00 GMT",
-                        "requirements": {
-                            "age_max": 55,
-                            "age_min": 25,
-                            "gender": "M"
-                        },
-                        "title": "Movie 1"
-                    }
+        ```yaml
+            {
+                "success": True,
+                "movies": {
+                    "id": 1,
+                    "release_date": "Fri, 01 Jan 2021 00:00:00 GMT",
+                    "requirements": {
+                        "age_max": 55,
+                        "age_min": 25,
+                        "gender": "M"
+                    },
+                    "title": "Movie 1"
                 }
-            ```
+            }
+        ```
     </details>
 
     <details>
@@ -122,19 +124,19 @@ You can read more about it in [.frontend](.frontend/README.md).
 
     * `POST /movies/new`
     * Sample Body [json]
-            ```yaml
-            {
-                "title":"Movie Title",
-                "release_date":"12-12-12",
-                "requirements":{"age_min":20, "age_max":40, "gender":"M"}
-            }
-            ```
+        ```yaml
+        {
+            "title":"Movie Title",
+            "release_date":"12-12-12",
+            "requirements":{"age_min":20, "age_max":40, "gender":"M"}
+        }
+        ```
     * Sample Response [json]
-            ```yaml
-             {
-                 "success": True
-             }
-            ```
+        ```yaml
+            {
+                "success": True
+            }
+        ```
     </details>
 
     <details>
@@ -143,28 +145,28 @@ You can read more about it in [.frontend](.frontend/README.md).
     * `PATCH /movies/movie_id`
     * Request Parameters - movie_id=[integer]
     * Sample Body [json]
-            ```yaml
-            {
-                "release_date":"12-12-12",
-                "requirements":{"age_min":20, "age_max":50, "gender":"M"}
-            }
-            ``` 
+        ```yaml
+        {
+            "release_date":"12-12-12",
+            "requirements":{"age_min":20, "age_max":50, "gender":"M"}
+        }
+        ``` 
     * Sample Response [json]
-            ```yaml
-             {
-                 "success": True,
-                 "movie": {
-                        "id": 1,
-                        "release_date": "Wed, 12 Dec 2012 00:00:00 GMT",
-                        "requirements": {
-                            "age_max": 55,
-                            "age_min": 25,
-                            "gender": "M"
-                        },
-                        "title": "Movie 1"
-                }
-             }
-            ```
+        ```yaml
+            {
+                "success": True,
+                "movie": {
+                    "id": 1,
+                    "release_date": "Wed, 12 Dec 2012 00:00:00 GMT",
+                    "requirements": {
+                        "age_max": 55,
+                        "age_min": 25,
+                        "gender": "M"
+                    },
+                    "title": "Movie 1"
+            }
+            }
+        ```
     </details>
 
     <details>
@@ -173,21 +175,21 @@ You can read more about it in [.frontend](.frontend/README.md).
     * `DELETE  /movies/movie_id`
     * Request Parameters - movie_id=[integer]
     * Sample Response [json]
-            ```yaml
-             {
-                 "success": True,
-                 "movie": {
-                        "id": 1,
-                        "release_date": "Wed, 12 Dec 2012 00:00:00 GMT",
-                        "requirements": {
-                            "age_max": 55,
-                            "age_min": 25,
-                            "gender": "M"
-                        },
-                        "title": "Movie 1"
-                }
-             }
-            ```
+        ```yaml
+            {
+                "success": True,
+                "movie": {
+                    "id": 1,
+                    "release_date": "Wed, 12 Dec 2012 00:00:00 GMT",
+                    "requirements": {
+                        "age_max": 55,
+                        "age_min": 25,
+                        "gender": "M"
+                    },
+                    "title": "Movie 1"
+            }
+            }
+        ```
     </details>
 
 * ACTORS
@@ -195,42 +197,44 @@ You can read more about it in [.frontend](.frontend/README.md).
     <summary>GET</summary>
 
     1. All actors
-    * `GET - /actors`
-    * Sample Response [json]
-            ```yaml
-             {
-                 "success": True,
-                 "actors": [
-                    {
-                        "age": 57,
-                        "gender": "M",
-                        "id": 1,
-                        "name": "Tom Cruise"
-                    },
-                    {
-                        "age": 58,
-                        "gender": "M",
-                        "id": 2,
-                        "name": "George Clooney"
-                    }
-             }
-            ```
 
-    2. Specific actor by id
-    * `GET  /actors/actor_id`
-    * Request Parameters - actor_id=[integer]
+    * `GET /actors`
     * Sample Response [json]
-            ```yaml
-             {
-                "actors": {
+        ```yaml
+            {
+                "success": True,
+                "actors": [
+                {
                     "age": 57,
                     "gender": "M",
                     "id": 1,
                     "name": "Tom Cruise"
                 },
-                "success": true
-             }
-            ```
+                {
+                    "age": 58,
+                    "gender": "M",
+                    "id": 2,
+                    "name": "George Clooney"
+                }
+            }
+        ```
+
+    2. Specific actor by id
+
+    * `GET /actors/actor_id`
+    * Request Parameters - actor_id=[integer]
+    * Sample Response [json]
+        ```yaml
+            {
+            "actors": {
+                "age": 57,
+                "gender": "M",
+                "id": 1,
+                "name": "Tom Cruise"
+            },
+            "success": true
+            }
+        ```
     </details>
 
     <details>
@@ -238,19 +242,19 @@ You can read more about it in [.frontend](.frontend/README.md).
 
     * `POST /actors/new`
     * Sample Body [json]
-            ```yaml
-                {
-                    "name":"Popat Lal",
-                    "age":38,
-                    "gender":"M"
-                }
-            ```
+        ```yaml
+            {
+                "name":"Popat Lal",
+                "age":38,
+                "gender":"M"
+            }
+        ```
     * Sample Response [json]
-            ```yaml
-             {
-                 "success": True
-             }
-            ```
+        ```yaml
+            {
+                "success": True
+            }
+        ```
     </details>
 
     <details>
@@ -259,24 +263,24 @@ You can read more about it in [.frontend](.frontend/README.md).
     * `PATCH /actors/actor_id`
     * Request Parameters - actor_id=[integer]
     * Sample Body [json]
-            ```yaml
-                {
-                    "name":"Anonymous"
-                    "gender":"F"
-                }
-            ```
+        ```yaml
+            {
+                "name":"Anonymous"
+                "gender":"F"
+            }
+        ```
     * Sample Response [json]
-            ```yaml
-                {
-                    "actors": {
-                        "age": 57,
-                        "gender": "F",
-                        "id": 1,
-                        "name": "Anonymous"
-                    },
-                    "success": true
-                }
-            ```
+        ```yaml
+            {
+                "actors": {
+                    "age": 57,
+                    "gender": "F",
+                    "id": 1,
+                    "name": "Anonymous"
+                },
+                "success": true
+            }
+        ```
     </details>
 
     <details>
@@ -285,17 +289,17 @@ You can read more about it in [.frontend](.frontend/README.md).
     * `DELETE /actors/actor_id`
     * Request Parameters - actor_id=[integer]
     * Sample Response [json]
-            ```yaml
-             {
-                "actors": {
-                    "age": 57,
-                    "gender": "M",
-                    "id": 1,
-                    "name": "Tom Cruise"
-                },
-                "success": true
-             }
-            ```
+        ```yaml
+            {
+            "actors": {
+                "age": 57,
+                "gender": "M",
+                "id": 1,
+                "name": "Tom Cruise"
+            },
+            "success": true
+            }
+        ```
     </details>
 
 ### Errors
