@@ -2,6 +2,9 @@
 Tests for fsnd capstone project.
 '''
 
+import sys
+sys.path.append("../")
+
 import os
 import json
 import pytest

@@ -39,9 +39,8 @@ ionic serve
 ## Steps to get a JWT
 
 | WARNING: You DO NOT want to login from a normal brower window. |
-| Please switch to an inconito or private browsing tab. Else, you will be logged in forever and never never never ever be able to login with different credentials. Think of it like [Limbo.](https://inception.fandom.com/wiki/Limbo)  |
+| Please switch to an inconito or private browsing tab. Else, you will be logged in forever and never never never ever be able to login with different credentials. Think of it like [Limbo.]( https://inception.fandom.com/wiki/Limbo )  |
 | This is not my thing. I just forked it from FSND Coffee Project. It might get fixed later. |
-| --- |
 
 1. As instructed, open the page in incognito or private browsing.
 2. Login with the credentials provided. You will have them, if you're an intended user.
